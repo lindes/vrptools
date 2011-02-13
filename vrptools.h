@@ -49,3 +49,24 @@ typedef struct _WBGAIN {
 
 /* The following is described but not named in the docs: */
 typedef VRP_LONG VRP_ImageNumber; /* signed; -/0/+ = before, at, and after trigger */
+
+/** File format structures -- see also file_format.txt **/
+typedef struct _VRP_CINEFILEHEADER {
+    VRP_WORD       Type;        /* MUST be the letters CI */
+    VRP_WORD       Headersize;  /* header size in bytes */
+    VRP_WORD       Compression; /* compression type, as follows: */
+#define VRP_CC_RGB   0; /* gray cines */
+#define VRP_CC_JPEG  1; /* JPEG-compressed file */
+#define VRP_CC_UNINT 2; /* uninterpolated color image -- see CFA field of SETUP */
+    VRP_WORD       Version;     /* currently supported here: 1 */
+    /* the "First" items below are relative to the trigger */
+    VRP_LONG       FirstMovieImage; /* first image recorded by camera */
+    VRP_DWORD      TotalImageCount; /* total frames recorded by camera */
+    VRP_LONG       FirstImageNo;    /* first image saved to this file */
+    VRP_DWORD      ImageCount;      /* count if images in file */
+    /* offsets: */
+    VRP_DWORD      OffImageHeader;  /* offset of BITMAPINFOHEADER */
+    VRP_DWORD      OffSetup;        /* offset of SETUP */
+    VRP_DWORD      OffImageOffsets; /* offset of array of image positions */
+    VRP_TIME64     TriggerTime;     /* when the trigger fired */
+} VRP_CINEFILEHEADER; /* CINEFILEHEADER in docs */

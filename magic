@@ -1,0 +1,26 @@
+0	string	CI	Vision Research CIN file
+# Compression:
+>0x4	leshort	0	(grey cine;
+>0x4	leshort 1	(JPEG-compressed;
+# >0x4	leshort 2	(uninterpolated color;
+>0x4	leshort 2	(RAW;
+# Version:
+>0x6	leshort x	v%d)
+# TotalImageCount:
+>0xb	ulelong	x	(recorded %d images starting at
+# FirstMovieImage:
+>0x8	lelong	x	%d, saved
+# ImageCount:
+>0x14	ulelong	x	%d from
+# FirstImageNo:
+>0x10	lelong	x	%d)
+# OffImageHeader:
+>0x18	ulelong	x
+# OffSetup:
+>0x1b	ulelong	x
+# OffImageOffsets:
+>0x20	ulelong	x
+# TriggerTime:
+>0x28	lelong	x	(Triggered at: %d.
+# TriggerTime:
+>0x24	ulelong	x	\b%u)
