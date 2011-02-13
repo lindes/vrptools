@@ -16,11 +16,41 @@
 >0x10	lelong	x	%d)
 # OffImageHeader:
 >0x18	ulelong	x
+# (OffImageHead: %u)
 # OffSetup:
 >0x1b	ulelong	x
+# (OffSetup: %u)
 # OffImageOffsets:
 >0x20	ulelong	x
+# (OffImageOffs: %u)
 # TriggerTime:
 >0x28	lelong	x	(Triggered at: %d.
 # TriggerTime:
 >0x24	ulelong	x	\b%u)
+
+### from OffImageOffsets:
+# biSize:
+>(0x18.l)	ulelong x
+# biWidth:
+>>&0x0	lelong	x	(%ux
+# biHeight:
+>>&0x4	lelong	x	\b%u,
+# biPlanes:
+>>&0x8	uleshort	x
+# biBitCount:
+>>&0xa	uleshort	x	%d bit
+# biCompression:
+>>&0xc	ulelong		0	RGB)
+>>&0xc	ulelong		!0	\b, unknown type)
+# biSizeImage:
+>>&0x10	ulelong		x
+# biXPelsPerMeter
+>>&0x14	lelong		x	(sensor resolution: %dx
+# biYPelsPerMeter
+>>&0x18	lelong		x	\b%d pixels per meter)
+# biClrUsed:
+>>&0x1b	ulelong		0
+# 	(uses max colors)
+>>&0x1b	ulelong		!0	(%d colors)
+# biClrImportant
+>>&0x20	ulelong		x	(%d maxval)
