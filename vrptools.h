@@ -70,3 +70,26 @@ typedef struct _VRP_CINEFILEHEADER {
     VRP_DWORD      OffImageOffsets; /* offset of array of image positions */
     VRP_TIME64     TriggerTime;     /* when the trigger fired */
 } VRP_CINEFILEHEADER; /* CINEFILEHEADER in docs */
+
+/* bitmap info -- same structure as windows bitmaps, but tweaked to
+ * allow greater bit-depth */
+typedef struct _VRP_BITMAPINFOHEADER {
+    VRP_DWORD      biSize;          /* bytes required by structure (without palette) */
+    VRP_LONG       biWidth;         /* width in pixels */
+    VRP_LONG       biHight;         /* height in pixels - bottom-up from lower-left for phantom */
+    VRP_WORD       biPlanes;        /* planes - must be 1 */
+    VRP_WORD       biBitCount;      /* bits per pixel - Phantom can have:
+				     * 8 or 16:  monochrome (different from windows;
+				     *           camera may only support 10,12,14)
+				     * 24 or 48: color RGB
+				     * color palette images not accepted
+				     */
+    VRP_DWORD      biCompression;   /* only BI_RGB is supported */
+#define BI_RGB 0;                   /* per teh intarnets */
+    VRP_DWORD      biSizeImage;     /* size of image in bytes */
+    VRP_LONG       biXPelsPerMeter; /* horizontal resolution at sensor */
+    VRP_LONG       biYPelsPerMeter; /* vertical resolution at sensor */
+    VRP_DWORD      biClrUsed;       /* # colors in color table (used?) */
+    VRP_DWORD      biClrImportant;  /* for 16,48bit, max sample value +1
+				     * (1024, 4096, or 16384 for 10,12,14 bit) */
+} VRP_BITMAPINFOHEADER; /* BITMAPINFOHEADER in docs */
