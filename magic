@@ -15,11 +15,9 @@
 # FirstImageNo:
 >0x10	lelong	x	%d)
 # OffImageHeader:
->0x18	ulelong	x
-# (OffImageHead: %u)
+>0x18	ulelong	x (OffImageHead: %u)
 # OffSetup:
->0x1b	ulelong	x
-# (OffSetup: %u)
+>0x1c	ulelong	x (OffSetup: %u)
 # OffImageOffsets:
 >0x20	ulelong	x
 # (OffImageOffs: %u)
@@ -54,3 +52,64 @@
 >>&0x1b	ulelong		!0	(%d colors)
 # biClrImportant
 >>&0x20	ulelong		x	(%d maxval)
+
+### from OffSetup
+>(0x1c.l)	ulelong	x
+# FrameRate16 -- obsolete
+>>&0x0		leshort	x
+# Shutter16 -- obsolete
+>>&0x2		leshort	x
+# PostTrigger16 -- obsolete
+>>&0x4		leshort	x
+# FrameDelay16 -- obsolete
+>>&0x6		leshort	x
+# AspectRatio -- obsolete
+>>&0x8		leshort	x
+# Contrast16
+>>&0xa		leshort	x
+# Bright16
+>>&0xc		leshort	x
+# Rotate16
+>>&0xe		byte	x
+# TimeAnnotation
+>>&0xf		byte	x
+# TrigCine
+>>&0x10		byte	x
+# TrigFrame
+>>&0x11		byte	0	(sync internal)
+>>&0x11		byte	1	(sync external)
+>>&0x11		byte	2	(sync locktoirig [sic])
+>>&0x11		byte	>2	(unknown sync %d)
+# ShutterOn -- not used
+>>&0x12		byte	x
+# DescriptionOld
+# >>&0x13		string	x (DescOld: %s)
+# >>&0x88		string	ST	(MARK)
+# >>0xe0 string ST (found mark at 0xe0)
+# Mark after DescriptionOld
+>>&0x88		string	ST
+# Length:
+>>&0x8a		leshort	x
+# (length %d)
+# Binning: -- obsolete
+>>&0x8c		leshort	x
+# SigOption
+>>&0x8e		uleshort	0	(SamplesPerImage)
+>>&0x8e		uleshort	1	(Max signal samples)
+# BinChannels
+>>&0x90		leshort	x	(%d SAM channels)
+# SamplesPerImage
+>>&0x92		byte	1	(%d sample)
+>>&0x92		byte	!1	(%d samples)
+# BinName[8][11]
+>>&0x93		string	!\0	(Bins: %s,
+>>&0x9e		string	!\0	%s,
+>>&0xa9		string	!\0	%s,
+>>&0xb4		string	!\0	%s,
+>>&0xbf		string	!\0	%s,
+>>&0xca		string	!\0	%s,
+>>&0xd5		string	!\0	%s,
+>>&0xe0		string	!\0	%s)
+# AnaOption
+### Not finished
+# >>&0xeb		uleshort
