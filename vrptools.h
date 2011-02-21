@@ -281,3 +281,19 @@ typedef struct _VRP_SETUP {
     /* once again, should be CHAR? */
     VRP_STRING     Description[4096]; /* User description or comments */
 } VRP_SETUP; /* SETUP in docs */
+
+/* Tagged blocks -- present if there's space between the end of SETUP and the beginning of ImageOffsets */
+
+typedef _VRP_TAGGED_BLOCK {
+    VRP_DWORD      BlockSize;      /* size of this tagged block, including header */
+    VRP_WORD       Type;           /* types enumerated below */
+    VRP_WORD       Reserved;       /* 1 in all blocks but last one, where it's
+                                    * zero.  Which to me means it
+                                    * ought to be called bLastBlock or
+                                    * somesuch. */
+    VRP_BYTE       Data[0];        /* really (BlockSize - 8) bytes. */
+} VRP_TAGGED_BLOCK;
+
+/* tab stops (emacs: (edit-tab-stops)):
+    :              :               :
+*/
