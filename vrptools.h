@@ -1,5 +1,7 @@
 /*
  * vrptools.h -- general header for vrptools
+ *
+ * Copyright 2011 by David Lindes.  All rights reserved.
  */
 
 #include <sys/types.h>
