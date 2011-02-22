@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+ARGV.each do |filename|
+  outname = filename.sub(/.txt$/, '.cine')
+  if(File.exists?(outname))
+    warn "Sorry, #{outname} exists; won't convert #{filename}"
+    next
+  end
+
+  infile = File.open(filename)
+  outfile = File.open(outname, 'wb')
+  warn "Converting #{filename} from hex to binary, into #{outname}"
+  infile.each_line do |line|
+    line.sub!(/#.*/, '')
+    next if line =~ /^\s*$/
+    (addr, data) = line.split(/\s+/, 2)
+    if(addr !~ /^[\dA-F]{8}$/)
+      warn "Warning: unruly line: #{line}"
+      next
+    end
+    data = data.split(/\s+/)
+    if(data.size != 16 and !infile.eof?)
+      warn "Warning: line has bad data size #{data.size}, should be 16:\n\t#{line}"
+    end
+    outfile.syswrite(data.pack('H2' * data.size))
+  end
+end
