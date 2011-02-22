@@ -284,7 +284,7 @@ typedef struct _VRP_SETUP {
 
 /* Tagged blocks -- present if there's space between the end of SETUP and the beginning of ImageOffsets */
 
-typedef _VRP_TAGGED_BLOCK {
+typedef struct _VRP_TAGGED_BLOCK {
     VRP_DWORD      BlockSize;      /* size of this tagged block, including header */
     VRP_WORD       Type;           /* types enumerated below */
     VRP_WORD       Reserved;       /* 1 in all blocks but last one, where it's
@@ -293,6 +293,46 @@ typedef _VRP_TAGGED_BLOCK {
                                     * somesuch. */
     VRP_BYTE       Data[0];        /* really (BlockSize - 8) bytes. */
 } VRP_TAGGED_BLOCK;
+
+enum VRP_TAGGED_BLOCK_TYPE {
+    VRP_TB_Analog_and_digital_signals = 1000, /* 0x3e8 -- no longer used */
+    VRP_TB_Image_time                 = 1001, /* 0x3e9 -- no longer used -- TIME64 array and possible
+                                               * DWORD array for time and exposure (respectively; the
+                                               * latter only if BlockSize shows it's available) for each
+                                               * *recorded* frame. */
+    VRP_TB_Time_only                  = 1002, /* 0x3ea --- array of TIME64s for the *saved* images. */
+    VRP_TB_Exposure_only              = 1003, /* 0x3eb -- array of DWORD representing exposure time in
+                                               * each frame saved -- may vary due to auto-exposure.
+                                               * Divide by 2**32 to get time in (fractional) seconds. */
+    VRP_TB_Range_data                 = 1004, /* 0x03ec -- info about orientation and distance to subject
+                                               * "not fully defined at this time and should be ignored" */
+    VRP_TB_BinSig                     = 1005, /* 0x3ed -- binary signals recorded by SAM3 module.
+                                               * multichannel and multisample per image -- stored 8
+                                               * samples per byte; only for frames saved.  Number of
+                                               * channels and samples-per-image stored in SETUP. */
+    VRP_TB_AnaSig                     = 1006, /* 0x3ee -- analog signals from SAM3; 16 bits per sample.
+                                               * channels and samples-per-image stored in SETUP */
+};
+
+/* pImage[ImageCount] -- not sure if/what I need as far as structure for this */
+
+/* sigh, the following needs to be two structures, because there's a variable-sized element
+ * in the middle of the structure.  Breaking it up into AnnotationData and ImageData.  Both occur for
+ * each image. */
+
+typedef struct _VRP_ImageAnnotation {
+    VRP_DWORD      AnnotationSize;    /* total length of annotation (including this size) */
+    VRP_BYTE       Annotation[0];     /* actually AnnotationSize - 8 */
+    /* use and structure of annotation not defined, except that the last DWORD should always
+     * be the image size.  Annotation data may be absent, but the AnnotationSize will always be there */
+    /* And yes, I know, the last two sentences contradict each other.  We'll see. Oh, wait... */
+} VRP_ImageAnnotation;
+
+/* offset of this is at ImageAnnotation + 4 - (AnnotationSize) */
+typedef struct _VRP_ImageData {
+    VRP_DWORD      ImageSize;         /* "Oh, wait" -- is this considered "the last two bytes..."? */
+    /* example: 08 00 00 00  00 A6 0E 00 -- annotation size 8; image size 960,000 (800x600*2) */
+} VRP_ImageData;
 
 /* tab stops (emacs: (edit-tab-stops)):
     :              :               :
