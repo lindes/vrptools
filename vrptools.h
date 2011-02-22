@@ -332,7 +332,25 @@ typedef struct _VRP_ImageAnnotation {
 typedef struct _VRP_ImageData {
     VRP_DWORD      ImageSize;         /* "Oh, wait" -- is this considered "the last two bytes..."? */
     /* example: 08 00 00 00  00 A6 0E 00 -- annotation size 8; image size 960,000 (800x600*2) */
+    /* there are different ways this can be stored, I figure a union makes sense for this: */
+    union _VRP_PixelData {
+        VRP_BYTE   gray8;
+        VRP_WORD   gray16;
+        struct _VRP_PixelData_BGR8 {
+            VRP_BYTE b;
+            VRP_BYTE g;
+            VRP_BYTE r;
+        } bgr8;
+        struct _VRP_PixelData_BGR16 {
+            VRP_WORD b;
+            VRP_WORD g;
+            VRP_WORD r;
+        } bgr16;
+    } pixels[0];
 } VRP_ImageData;
+
+/* compressed files are proprietary.  Unless that changes, we won't be supporting them here. */
+
 
 /* tab stops (emacs: (edit-tab-stops)):
     :              :               :
