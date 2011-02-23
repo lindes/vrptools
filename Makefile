@@ -1,4 +1,4 @@
-CFLAGS += -Werror
+CFLAGS += -Werror -Wall -Wextra
 
 HEADERS = vrptools.h
 
@@ -27,3 +27,6 @@ ${LIBRARY}: lib/read_cine.o
 	${AR} cruv $@ $<
 
 cineinfo: cineinfo.o ${LIBRARY}
+
+clean:
+	rm -f *.o lib/*.[oa]
