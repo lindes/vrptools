@@ -5,6 +5,7 @@
  */
 
 #include <sys/types.h>
+#include <sys/stat.h>
 
 /** Base data types -- note: Intel little-endian **/
 typedef char          VRP_BYTE;   /* BYTE in docs */
@@ -351,7 +352,19 @@ typedef struct _VRP_ImageData {
 
 /* compressed files are proprietary.  Unless that changes, we won't be supporting them here. */
 
+/* New structure for this project: */
+typedef struct _VRP_File {
+    char *name;
+    int fd;
+    struct stat st;
 
-/* tab stops (emacs: (edit-tab-stops)):
-    :              :               :
-*/
+    VRP_CINEFILEHEADER *header;
+    /* XXX to be continued */
+} VRP_File;
+
+typedef VRP_File *VRP_Handle;
+
+VRP_Handle read_cine_fd(int fd, const char *name);
+VRP_Handle read_cine(const char *filename);
+void free_cine_file(VRP_Handle handle); /* doesn't free handle, just its contents */
+void free_cine_handle(VRP_Handle handle); /* calls free_cine_file, then frees handle */
