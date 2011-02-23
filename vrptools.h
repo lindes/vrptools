@@ -242,10 +242,13 @@ typedef struct _VRP_SETUP {
     VRP_BOOL       bStampTime;      /* Stamp time (in continuous recording):
                                      * 1 = absolute time,
                                      * 3 = from trigger (boolean, huh?  oy.) */
+                                    /* Note: Based on their example data being 0, I'm guessing
+                                     * they mean 0, not 3? */
     VRP_UINT       SoundDest;       /* sound device: 0=none, 1=speaker, 2=sound board */
     VRP_UINT       FRPSteps;        /* suplimentary steps in frame rate profile (0 = no profile) */
     VRP_INT        FRPImgNr[16];    /* Image Number for where rate and/or exposure changes
                                      * (up to 16 pts -- 4 in current cameras) */
+    VRP_UINT       FRPRate[16];     /* New value for frame rate (fps) */
     VRP_UINT       FRPExp[16];      /* new exposure value, nanoseconds -- not implemented */
     VRP_INT        MCCnt;           /* Multicine (segmented) recording: partitions = cine count - 1.
                                      * preview cine does not need partition. */
