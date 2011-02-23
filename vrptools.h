@@ -80,7 +80,7 @@ typedef struct _VRP_CINEFILEHEADER {
 typedef struct _VRP_BITMAPINFOHEADER {
     VRP_DWORD      biSize;          /* bytes required by structure (without palette) */
     VRP_LONG       biWidth;         /* width in pixels */
-    VRP_LONG       biHight;         /* height in pixels - bottom-up from lower-left for phantom */
+    VRP_LONG       biHeight;         /* height in pixels - bottom-up from lower-left for phantom */
     VRP_WORD       biPlanes;        /* planes - must be 1 */
     VRP_WORD       biBitCount;      /* bits per pixel - Phantom can have:
                                      * 8 or 16:  monochrome (different from windows;
@@ -98,6 +98,16 @@ typedef struct _VRP_BITMAPINFOHEADER {
                                      * (1024, 4096, or 16384 for 10,12,14 bit) */
 } VRP_BITMAPINFOHEADER; /* BITMAPINFOHEADER in docs */
 
+/* Sigh.  Unfortunately, there are a couple of fields here that try to
+ * re-align themselves to either 2- or 4-byte boundaries, by default,
+ * yet the structure setup is such that that's not where they occur.
+ * To fix it, we use #pragma pack(1) -- first pushing a stack for this
+ * pragma, which we pop again at the end of the SETUP structure.
+ * See http://en.wikipedia.org/wiki/Data_structure_alignment (search
+ * for pack, and/or pack(1)).
+ */
+#pragma pack(push)
+#pragma pack(1)
 typedef struct _VRP_SETUP {
     VRP_WORD       FrameRate16;     /* obsolete */
     VRP_WORD       Shutter16;       /* obsolete */
@@ -108,17 +118,17 @@ typedef struct _VRP_SETUP {
     VRP_WORD       Bright16;        /* obsolete */
     VRP_BYTE       Rotate16;        /* obsolete -- note, despite the name, the docs say this is a BYTE. */
     VRP_BYTE       TimeAnnotation;  /* obsolete */
-    VRP_BYTE       TrigCene;        /* obsolete */
+    VRP_BYTE       TrigCine;        /* obsolete */
     VRP_BYTE       TrigFrame;       /* Still used??? doesn't say not; says :
                                        0 = internal
                                        1 = external
                                        2 = locktoirig (?) */
     VRP_BYTE       ShutterOn;       /* obsolete */
-#define VRP_MAXLENDESCRIPTION_OLD 118 /* value for this is not
-                                         actually documented;
-                                         fortunately, it was able to
-                                         be calculated from the Mark
-                                         field. */
+#define VRP_MAXLENDESCRIPTION_OLD 121 /* value for this is not
+                                       * actually documented;
+                                       * fortunately, it was able to
+                                       * be calculated from seeing
+                                       * where the Mark field landed. */
     VRP_CHAR       DescriptionOld[VRP_MAXLENDESCRIPTION_OLD]; /* obsolete */
     VRP_WORD       Mark;            /* Marker for (new) setup structure */
     VRP_WORD       Length;          /* Length of the current version of SETUP */
@@ -140,15 +150,13 @@ typedef struct _VRP_SETUP {
                                      * 4 = Data Translation DT3010 */
     VRP_SHORT      ChOption[8];     /* per-channel analog gain, 4-bit (values 1-8) (?) */
     VRP_FLOAT      AnaGain[8];      /* gain correction -- voltage to real measurement units */
-    /* these next two seem like they should be CHAR, not STRING... ?? */
-    VRP_STRING     AnaUnit[8][6];   /* measurement unit for ana channels - 5-char strings, \0-term */
-    VRP_STRING     AnaName[8][11];  /* channel name for first 8 analog channels (@10+\0) */
-    VRP_LONG       IFirstImage;     /* "Range of images for continuous recording: first image" (?) */
+    VRP_CHAR       AnaUnit[8][6];   /* measurement unit for ana channels - 5-char strings, \0-term */
+    VRP_CHAR       AnaName[8][11];  /* channel name for first 8 analog channels (@10+\0) */
+    VRP_LONG       lFirstImage;     /* "Range of images for continuous recording: first image" (?) */
     VRP_DWORD      dwImageCount;    /* image count for continuous and signal recording */
     VRP_SHORT      nQFactor;        /* Quality - for compressed files on continous; 2..255 */
     VRP_WORD       wCineFileType;   /* Cine file type - for continuous recording. */
-    /* another "string" -- ?? */
-    VRP_STRING     szCinePath[4][65]; /* 4 paths to save cine files? I don't get it. */
+    VRP_CHAR       szCinePath[4][65]; /* 4 paths to save cine files? I don't get it. */
     VRP_WORD       bMainsFreq;      /* true = 60Hz (USA); false = 50Hz (europe), for signal view in DSP */
 
     /* "Time board -- deprecated:" */
@@ -279,9 +287,9 @@ typedef struct _VRP_SETUP {
     VRP_UINT       ImWidthAcq;
     VRP_UINT       ImHeightAcq;
 
-    /* once again, should be CHAR? */
-    VRP_STRING     Description[4096]; /* User description or comments */
+    VRP_CHAR       Description[4096]; /* User description or comments */
 } VRP_SETUP; /* SETUP in docs */
+#pragma pack(pop)
 
 /* Tagged blocks -- present if there's space between the end of SETUP and the beginning of ImageOffsets */
 
