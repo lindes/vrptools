@@ -1,3 +1,5 @@
+Ascii-art of some information from the PDF:
+
                       +----------------------------+
 Position 0x00000000   |      CINE FILE HEADER      |
      in a cine file   |            ...             |

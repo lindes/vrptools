@@ -1,3 +1,15 @@
+/*
+ * print_helpers.c -- helper functions for printing info from CINE files.
+ *
+ * part of vrptools -- https://github.com/lindes/vrptools
+ *
+ * Copyright 2011 by David Lindes.  All rights reserved.
+ *
+ * Available under terms in the LICENSE file that should accompany
+ * this file.  Please consider that file to be included herein by
+ * reference.
+ */
+
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>

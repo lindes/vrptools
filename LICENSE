@@ -1,0 +1,30 @@
+This is the LICENSE file for vrptools -- https://github.com/lindes/vrptools
+
+The following applies to everything that's part of vrptools, with the
+exception of content directly obtained or derived from Vision Research
+(a list of which can be found later in this file):
+
+Copyright 2011 by David Lindes.  All rights reserved.
+
+I am currently releasing this software under the GPLv3.  As such, the following applies:
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Also as such, the file COPYING is an exact mirror of content
+downloaded from http://www.gnu.org/licenses/gpl.txt as of 2011-02-23.
+
+I am open to considering other open-source licenses for this software,
+and will consider any requests for such, which you may submit by
+contacting me through the GitHub link at the top of this file, and/or
+as described in the README.md (markdown) file.

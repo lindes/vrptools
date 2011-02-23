@@ -1,3 +1,15 @@
+/*
+ * cineinfo.c -- simple command for displaying a bunch of info about a CINE file
+ *
+ * part of vrptools -- https://github.com/lindes/vrptools
+ *
+ * Copyright 2011 by David Lindes.  All rights reserved.
+ *
+ * Available under terms in the LICENSE file that should accompany
+ * this file.  Please consider that file to be included herein by
+ * reference.
+ */
+
 #include <stdio.h>
 
 #include "vrptools.h"

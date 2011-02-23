@@ -1,5 +1,16 @@
 #!/usr/bin/env ruby
 
+# hex2cine -- script for converting a hex-dump file to a CINE file
+#     (for use with the appendix data in the documentation.)
+#
+# part of vrptools -- https://github.com/lindes/vrptools
+#
+# Copyright 2011 by David Lindes.  All rights reserved.
+#
+# Available under terms in the LICENSE file that should accompany
+# this file.  Please consider that file to be included herein by
+# reference.
+
 ARGV.each do |filename|
   outname = filename.sub(/.txt$/, '.cine')
   if(File.exists?(outname))

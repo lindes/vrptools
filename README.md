@@ -73,3 +73,17 @@ I'll try to be prompt at taking a look.
 You're also welcome to submit "Issues" via GitHub.
 
 Or drop me a private message on there with any questions.
+
+License information:
+--------------------
+
+This file, and everything else in this project (with the exception of
+content taken or derived from Vision Research's documentation), is
+under the following:
+
+Copyright 2011 by David Lindes.  All rights reserved.
+
+It's also licensed according to the LICENSE file which (like this
+file) is part of [vrptools](https://github.com/lindes/vrptools).  That
+file should be considered to be included into this file by reference.
+Licensing subject to change; please see the LICENSE file.

@@ -1,3 +1,12 @@
+# Makefile for vrptools.
+#
+# Copyright 2011 by David Lindes.  All rights reserved.
+#
+# part of vrptools -- https://github.com/lindes/vrptools
+#
+# Available under terms in the LICENSE file that should accompany this
+# file.  Please consider that file to be included herein by reference.
+
 CFLAGS += -Werror -Wall -Wextra
 
 HEADERS = vrptools.h
