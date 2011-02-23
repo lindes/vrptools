@@ -358,7 +358,12 @@ typedef struct _VRP_File {
     int fd;
     struct stat st;
 
-    VRP_CINEFILEHEADER *header;
+    VRP_CINEFILEHEADER   *header;
+    VRP_BITMAPINFOHEADER *imageHeader;
+    VRP_SETUP            *setup;
+    VRP_TAGGED_BLOCK     *firstTaggedBlock;
+    VRP_ImageAnnotation  *firstImageAnnotation;
+
     /* XXX to be continued */
 } VRP_File;
 
@@ -368,3 +373,4 @@ VRP_Handle read_cine_fd(int fd, const char *name);
 VRP_Handle read_cine(const char *filename);
 void free_cine_file(VRP_Handle handle); /* doesn't free handle, just its contents */
 void free_cine_handle(VRP_Handle handle); /* calls free_cine_file, then frees handle */
+size_t vrp_image_size(VRP_Handle handle);

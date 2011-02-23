@@ -16,6 +16,7 @@
 VRP_Handle read_cine_fd(int fd, const char *name)
 {
     VRP_Handle  handle;
+    size_t      expected_size;
 
     if(!(handle = calloc(sizeof(VRP_File), 1)))
     {
@@ -29,7 +30,7 @@ VRP_Handle read_cine_fd(int fd, const char *name)
         return NULL;
     }
 
-    if(handle->st.st_size < sizeof(VRP_CINEFILEHEADER))
+    if((size_t)handle->st.st_size < sizeof(VRP_CINEFILEHEADER))
     {
         fprintf(stderr, "%s: too small to be a CINE file!\n", name);
         free_cine_handle(handle);
@@ -69,6 +70,42 @@ VRP_Handle read_cine_fd(int fd, const char *name)
     handle->fd = fd;
     handle->name = strdup(name);
 
+    /* note: doing this as an addition on the left of < rather than
+     * subtraction to the right is important -- dealing with unsigned
+     * values. */
+    if(handle->header->OffImageHeader + sizeof(VRP_BITMAPINFOHEADER) < (size_t)handle->st.st_size)
+        handle->imageHeader = ((void*)handle->header) + handle->header->OffImageHeader;
+    else
+        fprintf(stderr, "WARNING: %s is too small to contain Image Headers!\n", handle->name);
+
+    if(handle->header->OffSetup + sizeof(VRP_SETUP) < (size_t)handle->st.st_size)
+        handle->setup = ((void*)handle->header) + handle->header->OffSetup;
+    else
+        fprintf(stderr, "WARNING: %s is too small to contain Setup info!\n", handle->name);
+
+    if(handle->header->OffImageOffsets > handle->header->OffSetup + sizeof(VRP_SETUP))
+    {
+        if(handle->header->OffSetup + sizeof(VRP_SETUP) + sizeof(VRP_TAGGED_BLOCK) < (size_t)handle->st.st_size)
+            handle->firstTaggedBlock = (void*)handle->setup + sizeof(VRP_SETUP);
+        else
+            fprintf(stderr, "WARNING: It seems we ought to have tagged blocks, but we don't actually have space for them!\n");
+    }
+    else
+        fprintf(stderr, "INFO: No tagged blocks found.\n");
+
+    expected_size = handle->header->OffImageOffsets + handle->header->ImageCount * vrp_image_size(handle);
+    if((size_t)handle->st.st_size < expected_size)
+    {
+        fprintf(stderr, "WARNING: file appears to be truncated (not all images are present)"
+                " (size %llu, expected at least %lu.)\n", handle->st.st_size, expected_size);
+    }
+
+    /* set it anyway, so we can at least get some images, if we have
+     * them.  This could cause the client to have problems, but we
+     * should be able to mostly solve it by just providing an API for
+     * getting the address of a particular image. */
+    handle->firstImageAnnotation = (void*)handle->header + handle->header->OffImageOffsets;
+
     return handle;
 }
 
@@ -99,17 +136,18 @@ void free_cine_file(VRP_Handle handle)
     if(!handle) return;
 
     if(handle->header)
-    {
-        struct stat st;
+        if(munmap(handle->header, handle->st.st_size))
+            perror("munmap failed");
 
-        munmap(handle->header, handle->st.st_size);
-    }
-
+    /* only name has to be freed, everything else was under the mmap. */
     if(handle->name) free(handle->name);
 
-    handle->header = NULL;
-
-    /* TODO: add other fields */
+    /* but even mmap-based data should be reset: */
+    handle->header               = NULL;
+    handle->imageHeader          = NULL;
+    handle->setup                = NULL;
+    handle->firstTaggedBlock     = NULL;
+    handle->firstImageAnnotation = NULL;
 }
 
 void free_cine_handle(VRP_Handle handle)
@@ -118,4 +156,15 @@ void free_cine_handle(VRP_Handle handle)
 
     free_cine_file(handle);
     free(handle);
+}
+
+/* report the size, in bytes, of any one image file, as calculated by
+ * appropriate header flags (including bit depth, width, height, etc.)
+ * Note: Does *not* include the annotation. */
+size_t vrp_image_size(VRP_Handle handle)
+{
+    if(!handle->imageHeader)
+        return -1;
+
+    return(handle->imageHeader->biSizeImage);
 }
