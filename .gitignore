@@ -6,3 +6,4 @@ cineinfo
 *.o
 **/*.o
 **/*.a
+TAGS

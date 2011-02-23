@@ -31,5 +31,8 @@ ${LIBRARY}: lib/read_cine.o
 
 cineinfo: cineinfo.o ${LIBRARY}
 
+TAGS:
+	etags **/*.c **/*.h
+
 clean:
 	rm -f *.o lib/*.[oa]
