@@ -4,7 +4,7 @@ HEADERS = vrptools.h
 
 default: test
 
-test: header_check lib cineinfo magic appendex_example.cine
+test: header_check lib cineinfo magic appendix_example.cine
 	file -M magic *.cine
 	./cineinfo *.cine
 
@@ -13,7 +13,7 @@ header_check: header_check.c ${HEADERS}
 get_docs:
 	wget http://www.visionresearch.com/devzonedownloads/cine640.pdf
 
-appendex_example.cine: appendex_example.txt hex2cine
+appendix_example.cine: appendix_example.txt hex2cine
 	./hex2cine $<
 
 LIBRARY = lib/libvrp.a
