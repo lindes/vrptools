@@ -1,6 +1,10 @@
 CFLAGS += -Werror -Wall -Wextra
 
 HEADERS = vrptools.h
+PROGRAMS = cineinfo
+LIBRARY = lib/libvrp.a
+LIB_OBJ = lib/read_cine.o lib/print_helpers.o
+CFLAGS += -I.
 
 default: smalltest
 
@@ -19,10 +23,6 @@ get_docs:
 test_data/appendix_example.cine: test_data/appendix_example.txt hex2cine
 	./hex2cine $<
 
-LIBRARY = lib/libvrp.a
-LIB_OBJ = lib/read_cine.o lib/print_helpers.o
-CFLAGS += -I.
-
 ${LIB_OBJ} cineinfo.o: ${HEADERS}
 
 library: ${LIBRARY}
@@ -36,3 +36,6 @@ TAGS:
 
 clean:
 	rm -f *.o lib/*.[oa]
+
+clobber: clean
+	rm -f ${LIBRARY} ${PROGRAMS}
