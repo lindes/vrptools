@@ -15,12 +15,14 @@ LIBRARY = lib/libvrp.a
 LIB_OBJ = lib/read_cine.o lib/print_helpers.o
 CFLAGS += -I.
 
+EXAMPLE_CINE = test_data/appendix_example.cine
+
 default: smalltest
 
-smalltest: cineinfo test_data/appendix_example.cine
-	./cineinfo test_data/appendix_example.cine
+smalltest: cineinfo ${EXAMPLE_CINE}
+	./cineinfo ${EXAMPLE_CINE}
 
-test: ${PROGRAMS} magic test_data/appendix_example.cine
+test: ${PROGRAMS} magic ${EXAMPLE_CINE}
 	file -M magic test_data/*.cine
 	./cineinfo test_data/*.cine
 
@@ -45,4 +47,7 @@ clean:
 	rm -f *.o lib/*.[oa]
 
 clobber: clean
-	rm -f ${LIBRARY} ${PROGRAMS}
+	rm -f ${LIBRARY} ${PROGRAMS} ${EXAMPLE_CINE} TAGS
+
+distclean: clobber
+	rm -f cine640.pdf
