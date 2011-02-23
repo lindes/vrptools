@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
         printf("--=> %s <=--\n", argv[i]);
 
-        if(handle = read_cine(argv[i]))
+        if((handle = read_cine(argv[i])))
         {
             printf("Name: %s\n", handle->name);
             /* printf("%s: %p\n", argv[i], handle); */
