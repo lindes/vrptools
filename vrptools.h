@@ -42,7 +42,7 @@ typedef struct _VRP_IMFILTER {
     VRP_INT        Dim;       /* "Square kernel dimension 3,5" (?) */
     VRP_INT        Shifts;    /* Right-shifts of Coef (8 shifts = divide by 256) */
     VRP_INT        Bias;      /* "Bias to add at end" (?) */
-    VRP_INT        Coef[5*5]; /* max allocation for 5x5 filter (?) */
+    VRP_INT        Coef[5][5]; /* max allocation for 5x5 filter (?) */
 } VRP_IMFILTER; /* IMFILTER in docs */
 
 /* WBGAIN - white balance gains */
