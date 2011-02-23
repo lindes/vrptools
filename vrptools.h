@@ -253,7 +253,7 @@ typedef struct _VRP_SETUP {
     VRP_INT        MCCnt;           /* Multicine (segmented) recording: partitions = cine count - 1.
                                      * preview cine does not need partition. */
     VRP_FLOAT      MCPercent[64];   /* % memory used for partitions; only 15 used currently */
-    VRP_UINT       ClCalib;         /* Calibration for current image -- "CSR" - current session ref.
+    VRP_UINT       CICalib;         /* Calibration for current image -- "CSR" - current session ref.
                                      * bitmask of the following: */
 #define VRP_CALIB_BLACKREF   1 /* BlackRef in docs */
 #define VRP_CALIB_WHITECALIB 2 /* WhiteCalib in docs */
