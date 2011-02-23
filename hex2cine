@@ -18,6 +18,7 @@ ARGV.each do |filename|
       warn "Warning: unruly line: #{line}"
       next
     end
+    outfile.seek(addr.hex.to_i) # in case of gaps, which there are a couple of.
     data = data.split(/\s+/)
     if(data.size != 16 and !infile.eof?)
       warn "Warning: line has bad data size #{data.size}, should be 16:\n\t#{line}"
