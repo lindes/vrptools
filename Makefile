@@ -4,7 +4,8 @@ HEADERS = vrptools.h
 
 default: test
 
-test: header_check lib cineinfo
+test: header_check lib cineinfo magic
+	file -M magic *.cine
 	./cineinfo *.cine
 
 header_check: header_check.c ${HEADERS}
