@@ -385,3 +385,5 @@ VRP_Handle read_cine(const char *filename);
 void free_cine_file(VRP_Handle handle); /* doesn't free handle, just its contents */
 void free_cine_handle(VRP_Handle handle); /* calls free_cine_file, then frees handle */
 size_t vrp_image_size(VRP_Handle handle);
+void vrp_time_iso8601_s(VRP_TIME64 t, char *buf, int sz, int offset);
+const char const *vrp_time_iso8601(VRP_TIME64 t, int offset);

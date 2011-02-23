@@ -20,14 +20,14 @@ appendix_example.cine: appendix_example.txt hex2cine
 	./hex2cine $<
 
 LIBRARY = lib/libvrp.a
-
+LIB_OBJ = lib/read_cine.o lib/print_helpers.o
 CFLAGS += -I.
 
-lib/read_cine.o cineinfo.o: ${HEADERS}
+${LIB_OBJ} cineinfo.o: ${HEADERS}
 
 library: ${LIBRARY}
-${LIBRARY}: lib/read_cine.o
-	${AR} cruv $@ $<
+${LIBRARY}: ${LIB_OBJ}
+	${AR} cruv $@ ${LIB_OBJ}
 
 cineinfo: cineinfo.o ${LIBRARY}
 
