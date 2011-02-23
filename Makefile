@@ -2,9 +2,12 @@ CFLAGS += -Werror -Wall -Wextra
 
 HEADERS = vrptools.h
 
-default: test
+default: smalltest
 
-test: header_check lib cineinfo magic appendix_example.cine
+smalltest: cineinfo appendix_example.cine
+	./cineinfo appendix_example.cine
+
+test: header_check cineinfo magic appendix_example.cine
 	file -M magic *.cine
 	./cineinfo *.cine
 
@@ -22,7 +25,7 @@ CFLAGS += -I.
 
 lib/read_cine.o cineinfo.o: ${HEADERS}
 
-lib: ${LIBRARY}
+library: ${LIBRARY}
 ${LIBRARY}: lib/read_cine.o
 	${AR} cruv $@ $<
 
