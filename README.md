@@ -48,7 +48,7 @@ the time to figure out how one would go about installing it on one's
 system, but you can run `file -M magic foo.cine` and it will give some
 info.  Probably still needs more content there, and probably also
 needs to have some of it removed (or migrated to 'magic.verbose' or
-something), as the content is really long at the moment.
+something), as the output is really verbose at the moment.
 
 Technical Docs:
 ---------------
