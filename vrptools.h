@@ -65,9 +65,9 @@ typedef struct _VRP_CINEFILEHEADER {
     VRP_WORD       Type;        /* MUST be the letters CI */
     VRP_WORD       Headersize;  /* header size in bytes */
     VRP_WORD       Compression; /* compression type, as follows: */
-#define VRP_CC_RGB   0; /* gray cines */
-#define VRP_CC_JPEG  1; /* JPEG-compressed file */
-#define VRP_CC_UNINT 2; /* uninterpolated color image -- see CFA field of SETUP */
+#define VRP_CC_RGB   0 /* gray cines */
+#define VRP_CC_JPEG  1 /* JPEG-compressed file */
+#define VRP_CC_UNINT 2 /* uninterpolated color image -- see CFA field of SETUP */
     VRP_WORD       Version;     /* currently supported here: 1 */
     /* the "First" items below are relative to the trigger */
     VRP_LONG       FirstMovieImage; /* first image recorded by camera */
@@ -86,7 +86,7 @@ typedef struct _VRP_CINEFILEHEADER {
 typedef struct _VRP_BITMAPINFOHEADER {
     VRP_DWORD      biSize;          /* bytes required by structure (without palette) */
     VRP_LONG       biWidth;         /* width in pixels */
-    VRP_LONG       biHeight;         /* height in pixels - bottom-up from lower-left for phantom */
+    VRP_LONG       biHeight;        /* height in pixels - bottom-up from lower-left for phantom */
     VRP_WORD       biPlanes;        /* planes - must be 1 */
     VRP_WORD       biBitCount;      /* bits per pixel - Phantom can have:
                                      * 8 or 16:  monochrome (different from windows;
@@ -332,6 +332,8 @@ enum VRP_TAGGED_BLOCK_TYPE {
                                                * channels and samples-per-image stored in SETUP */
 };
 
+typedef int64_t VRP_ImageOffset;
+
 /* pImage[ImageCount] -- not sure if/what I need as far as structure for this */
 
 /* sigh, the following needs to be two structures, because there's a variable-sized element
@@ -379,9 +381,10 @@ typedef struct _VRP_File {
     VRP_BITMAPINFOHEADER *imageHeader;
     VRP_SETUP            *setup;
     VRP_TAGGED_BLOCK     *firstTaggedBlock;
+    VRP_ImageOffset      *firstImageOffset;
+    /* we probably don't really need this: */
     VRP_ImageAnnotation  *firstImageAnnotation;
-
-    /* XXX to be continued */
+    void                 *start, *end; /* convenience pointers */
 } VRP_File;
 
 typedef VRP_File *VRP_Handle;

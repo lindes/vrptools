@@ -50,6 +50,8 @@ VRP_Handle read_cine_fd(int fd, const char *name)
         return NULL;
     }
 
+    handle->start = handle->header; /* convenience pointer */
+
     /* after this point, if we bail, we want to do it in a consistent way: */
 #define BAIL free_cine_handle(handle); return NULL
 
@@ -80,12 +82,12 @@ VRP_Handle read_cine_fd(int fd, const char *name)
      * subtraction to the right is important -- dealing with unsigned
      * values. */
     if(handle->header->OffImageHeader + sizeof(VRP_BITMAPINFOHEADER) < (size_t)handle->st.st_size)
-        handle->imageHeader = ((void*)handle->header) + handle->header->OffImageHeader;
+        handle->imageHeader = handle->start + handle->header->OffImageHeader;
     else
         fprintf(stderr, "WARNING: %s is too small to contain Image Headers!\n", handle->name);
 
     if(handle->header->OffSetup + sizeof(VRP_SETUP) < (size_t)handle->st.st_size)
-        handle->setup = ((void*)handle->header) + handle->header->OffSetup;
+        handle->setup = handle->start + handle->header->OffSetup;
     else
         fprintf(stderr, "WARNING: %s is too small to contain Setup info!\n", handle->name);
 
@@ -110,7 +112,11 @@ VRP_Handle read_cine_fd(int fd, const char *name)
      * them.  This could cause the client to have problems, but we
      * should be able to mostly solve it by just providing an API for
      * getting the address of a particular image. */
-    handle->firstImageAnnotation = (void*)handle->header + handle->header->OffImageOffsets;
+    handle->firstImageOffset     = handle->start + handle->header->OffImageOffsets;
+    handle->firstImageAnnotation = handle->start + *(handle->firstImageOffset);
+
+    fprintf(stderr, "DEBUG: adding %u to %p, we get %p\n", handle->header->OffImageOffsets, handle->header, handle->firstImageAnnotation);
+    handle->end = handle->start + handle->st.st_size;
 
     return handle;
 }

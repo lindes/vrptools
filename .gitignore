@@ -3,6 +3,7 @@ cine640.pdf
 appendix_example.cine
 header_check
 cineinfo
+cine-extract
 *.o
 **/*.o
 **/*.a

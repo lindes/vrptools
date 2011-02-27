@@ -10,7 +10,7 @@
 CFLAGS += -Werror -Wall -Wextra
 
 HEADERS = vrptools.h
-PROGRAMS = cineinfo
+PROGRAMS = cineinfo cine-extract
 LIBRARY = lib/libvrp.a
 LIB_OBJ = lib/read_cine.o lib/print_helpers.o
 CFLAGS += -I.
@@ -19,8 +19,8 @@ EXAMPLE_CINE = test_data/appendix_example.cine
 
 default: smalltest
 
-smalltest: cineinfo ${EXAMPLE_CINE}
-	./cineinfo ${EXAMPLE_CINE}
+smalltest: cine-extract ${EXAMPLE_CINE}
+	./cine-extract ${EXAMPLE_CINE}
 
 test: ${PROGRAMS} magic ${EXAMPLE_CINE}
 	file -M magic test_data/*.cine
@@ -38,7 +38,7 @@ library: ${LIBRARY}
 ${LIBRARY}: ${LIB_OBJ}
 	${AR} cruv $@ ${LIB_OBJ}
 
-cineinfo: cineinfo.o ${LIBRARY}
+${PROGRAMS}: ${LIBRARY}
 
 TAGS:
 	etags **/*.c **/*.h
