@@ -10,7 +10,7 @@
 CFLAGS += -Werror -Wall -Wextra
 
 HEADERS = vrptools.h
-PROGRAMS = cineinfo cine-extract
+PROGRAMS = cine-info cine-extract
 LIBRARY = lib/libvrp.a
 LIB_OBJ = lib/read_cine.o lib/print_helpers.o
 CFLAGS += -I.
@@ -24,7 +24,7 @@ smalltest: cine-extract ${EXAMPLE_CINE}
 
 test: ${PROGRAMS} magic ${EXAMPLE_CINE}
 	file -M magic test_data/*.cine
-	./cineinfo test_data/*.cine
+	./cine-info test_data/*.cine
 
 get_docs:
 	wget http://www.visionresearch.com/devzonedownloads/cine640.pdf
@@ -32,7 +32,7 @@ get_docs:
 test_data/appendix_example.cine: test_data/appendix_example.txt hex2cine
 	./hex2cine $<
 
-${LIB_OBJ} cineinfo.o: ${HEADERS}
+${LIB_OBJ} cine-info.o cine-extract.o: ${HEADERS}
 
 library: ${LIBRARY}
 ${LIBRARY}: ${LIB_OBJ}
