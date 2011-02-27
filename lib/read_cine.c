@@ -102,21 +102,25 @@ VRP_Handle read_cine_fd(int fd, const char *name)
         fprintf(stderr, "INFO: No tagged blocks found.\n");
 
     expected_size = handle->header->OffImageOffsets + handle->header->ImageCount * vrp_image_size(handle);
+
     if((size_t)handle->st.st_size < expected_size)
     {
         fprintf(stderr, "WARNING: file appears to be truncated (not all images are present)"
                 " (size %llu, expected at least %lu.)\n", handle->st.st_size, expected_size);
     }
 
+    handle->end = handle->start + handle->st.st_size;
+
     /* set it anyway, so we can at least get some images, if we have
      * them.  This could cause the client to have problems, but we
      * should be able to mostly solve it by just providing an API for
      * getting the address of a particular image. */
     handle->firstImageOffset     = handle->start + handle->header->OffImageOffsets;
-    handle->firstImageAnnotation = handle->start + *(handle->firstImageOffset);
+    if((void*)handle->firstImageOffset > handle->end)
+        handle->firstImageOffset = NULL;
+    else
+        handle->firstImageAnnotation = handle->start + *(handle->firstImageOffset);
 
-    fprintf(stderr, "DEBUG: adding %u to %p, we get %p\n", handle->header->OffImageOffsets, handle->header, handle->firstImageAnnotation);
-    handle->end = handle->start + handle->st.st_size;
 
     return handle;
 }

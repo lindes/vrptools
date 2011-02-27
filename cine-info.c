@@ -37,7 +37,8 @@ void print_header_info(VRP_Handle handle)
     printf("  Saved images:      %d starting at %d\n", h->ImageCount, h->FirstImageNo);
     printf("  Offsets:           %d (BITMAPINFOHEADER), %d (SETUP), %d (Image array)\n",
            h->OffImageHeader, h->OffSetup, h->OffImageOffsets);
-    printf("  Trigger time:      %s\n", vrp_time_iso8601(h->TriggerTime, handle->setup->RecordingTimeZone));
+    if(handle->setup)
+        printf("  Trigger time:      %s\n", vrp_time_iso8601(h->TriggerTime, handle->setup->RecordingTimeZone));
 }
 
 void print_imageheader_info(VRP_Handle handle)
