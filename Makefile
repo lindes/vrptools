@@ -26,6 +26,8 @@ test: ${PROGRAMS} magic ${EXAMPLE_CINE}
 	file -M magic test_data/*.cine
 	./cine-info test_data/*.cine
 
+programs program: ${PROGRAMS}
+
 get_docs:
 	wget http://www.visionresearch.com/devzonedownloads/cine640.pdf
 

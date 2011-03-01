@@ -11,6 +11,7 @@
  */
 
 #include <stdio.h>
+#include <unistd.h> /* getopt() */
 
 #include "vrptools.h"
 
@@ -257,11 +258,58 @@ void print_image_info(VRP_Handle handle)
     printf("Image Info reporting not completed.\n");
 }
 
+void print_summary(VRP_Handle handle)
+{
+    VRP_CINEFILEHEADER  *h = handle->header;
+    VRP_SETUP           *s = handle->setup;
+    char                *mode;
+    int                 a, b, c, d, e, f;
+
+    switch(h->Compression)
+    {
+    case 2 /* where's my constant? */: mode = "RAW"; break;
+    default: mode = "[unknown]"; break;
+    }
+
+    printf(" %dx%d at %d fps (%s)\n", s->ImWidth, s->ImHeight, s->FrameRate, mode);
+
+    a = h->FirstMovieImage;
+    b = h->TotalImageCount;
+    c = a + b;
+
+    d = h->FirstImageNo;
+    e = h->ImageCount;
+    f = d + e;
+
+    printf(" Recorded frames %d => %d (%d total); saved frames %d => %d (%d total)\n", a, c, b, d, f, e);
+}
+
+void usage(const char *name)
+{
+    fprintf(stderr, "usage: %s [-v]\n", name);
+}
+
 int main(int argc, char *argv[])
 {
     int i;
+    int verbose = 0;
 
-    for(i = 1; i < argc; ++i)
+    while((i = getopt(argc, argv, "v")) != -1)
+    {
+        switch(i)
+        {
+        case 'v': verbose = 1; break;
+        default:
+            usage(argv[0]);
+            return -1;
+        }
+    }
+
+    argc -= optind;
+    argv += optind;
+
+
+    for(i = 0; i < argc; ++i)
     {
         VRP_Handle handle;
 
@@ -272,11 +320,19 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Failed to get handle on %s\n", argv[i]);
             continue;
         }
-        print_header_info(handle);
-        print_imageheader_info(handle);
-        print_setup_info(handle);
-        print_taggedblock_info(handle);
-        print_image_info(handle);
+
+        if(verbose)
+        {
+            print_header_info(handle);
+            print_imageheader_info(handle);
+            print_setup_info(handle);
+            print_taggedblock_info(handle);
+            print_image_info(handle);
+        }
+        else
+        {
+            print_summary(handle);
+        }
 
         free_cine_handle(handle);
     }
