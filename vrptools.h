@@ -39,7 +39,7 @@ typedef VRP_UINT      VRP_RECT[4]; /* NOT documented!  Guessing! (x,y,h,w?) */
 /* TIME64 - stores time in fixed point, 32.32 bit structure */
 typedef struct _VRP_TIME64 {
     VRP_DWORD      Fractions; /* "1/4Gig i.e. approx 1/4ns"; multiplied by 2**32 */
-                              /* listed first in the docs... seems weird, but ok. */
+                              /* This field is first because the structure is a single little-endian 64-bit number. */
     VRP_DWORD      Seconds;   /* standard unix epoch; but unsigned, goes to 2106 */
 } VRP_TIME64; /* TIME64 in docs */
 
