@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "vrptools.h"
 
@@ -147,11 +148,22 @@ int main(int argc, char *argv[])
 {
     int i;
     FILE *outfile;
+    const char *outdir = "cine-extract.d";
 
     for(i = 1; i < argc; ++i)
     {
         VRP_Handle handle;
         int first, trigger, last;
+        
+        if (!strcmp(argv[i], "-d")) {
+            i ++;
+            outdir = argv[i];
+            if (!outdir) {
+                fprintf(stderr, "Directory name must follow -d option\n");
+                exit(1);
+            }
+            continue;
+        }
 
         fprintf(stderr, "--=> reading %s <=--\n", argv[i]);
 
@@ -202,7 +214,7 @@ int main(int argc, char *argv[])
             {
                 char filename[BUFSIZ];
 
-                sprintf(filename, "cine-extract.d/img-%05u.ppm", j);
+                sprintf(filename, "%s/img-%05u.ppm", outdir, j);
                 fprintf(stderr, "Extracting image at offset %d into %s\n", j, filename);
 
                 if(!(outfile = fopen(filename, "wb")))
