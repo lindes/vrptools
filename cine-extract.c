@@ -13,10 +13,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "vrptools.h"
 
-void extract_image_by_offset(VRP_Handle handle, int offset, FILE *outfile)
+void extract_to_ppm_dir(VRP_Handle handle, const char *outdir);
+
+void extract_image_by_offset(VRP_Handle handle, int offset, 
+			     int *rows_out, int *cols_out,
+			     uint16_t **outbuf_out)
 {
     VRP_ImageOffset     *theImagePointer;
     VRP_ImageAnnotation *theAnnotation;
@@ -25,7 +30,7 @@ void extract_image_by_offset(VRP_Handle handle, int offset, FILE *outfile)
     int                 i, j, row, col, rows, cols;
     int                 left, right, top, bottom;
     int                 bufsiz;
-    static short        *outbuf = NULL;
+    uint16_t            *outbuf;
     float               wb_b, wb_r;
     struct _ppm_pixel {
         VRP_WORD r;
@@ -58,13 +63,19 @@ void extract_image_by_offset(VRP_Handle handle, int offset, FILE *outfile)
     wb_r = handle->setup->WBGain[0].R;
     wb_b = handle->setup->WBGain[0].B;
 
-    if(!outbuf && !(outbuf=calloc(bufsiz, sizeof(short))))
+    outbuf = *outbuf_out;
+    if(!outbuf)
     {
-        perror("calloc");
-        return;
+	outbuf=calloc(bufsiz, sizeof(*outbuf));
+	if (!outbuf)
+	{
+	    perror("calloc");
+	    return;
+	}
+	*outbuf_out = outbuf;
     }
-
-    fprintf(outfile, "P6\n%d %d\n%d\n", cols, rows, handle->imageHeader->biClrImportant);
+    *rows_out = rows;
+    *cols_out = cols;
 
     /* go through rows backwards, to convert bottom-up format to top-down: */
     for(i = rows - 1; i >= 0; --i)
@@ -126,8 +137,8 @@ void extract_image_by_offset(VRP_Handle handle, int offset, FILE *outfile)
             outbuf[3*(i*cols+j)+2] = pixel.b;
         }
     }
-    fwrite(outbuf, sizeof(short), bufsiz, outfile);
 }
+
 
 void extract_image_by_frame_id(VRP_Handle handle, int frame)
 {
@@ -147,7 +158,6 @@ void extract_image_by_frame_id(VRP_Handle handle, int frame)
 int main(int argc, char *argv[])
 {
     int i;
-    FILE *outfile;
     const char *outdir = "cine-extract.d";
 
     for(i = 1; i < argc; ++i)
@@ -202,35 +212,48 @@ int main(int argc, char *argv[])
                trigger+1 % 10 == 3 && trigger+1 != 13 ? "st" :
                "th", first, last);
 
-        {
-            unsigned int j;
-            /* by default, all frames, 1 at a time */
-            /* TODO: make these command-line args */
-            int first = 0, increment = 1;
 
-            if(first < 0) first = 0;
-
-            for(j = first; j < handle->header->ImageCount; j += increment)
-            {
-                char filename[BUFSIZ];
-
-                sprintf(filename, "%s/img-%05u.ppm", outdir, j);
-                fprintf(stderr, "Extracting image at offset %d into %s\n", j, filename);
-
-                if(!(outfile = fopen(filename, "wb")))
-                {
-                    perror(filename);
-                    return(1);
-                }
-
-                extract_image_by_offset(handle, j, outfile);
-
-                fclose(outfile);
-            }
-        }
+	extract_to_ppm_dir(handle, outdir);
 
         free_cine_handle(handle);
     }
 
     return(0);
+}
+
+
+void extract_to_ppm_dir(VRP_Handle handle, const char *outdir)
+{
+    unsigned int j;
+    /* by default, all frames, 1 at a time */
+    /* TODO: make these command-line args */
+    int first = 0, increment = 1;
+    uint16_t *outbuf = NULL;
+    int rows, cols;
+
+    if(first < 0) first = 0;
+    
+    for(j = first; j < handle->header->ImageCount; j += increment)
+    {
+	char filename[BUFSIZ];
+	FILE *outfile;
+	
+	sprintf(filename, "%s/img-%05u.ppm", outdir, j);
+	fprintf(stderr, "Extracting image at offset %d into %s\n", j, filename);
+	
+	if(!(outfile = fopen(filename, "wb")))
+	{
+	    perror(filename);
+	    return;
+	}
+	
+	extract_image_by_offset(handle, j, &rows, &cols, &outbuf);
+	fprintf(outfile, "P6\n%d %d\n%d\n", cols, rows, handle->imageHeader->biClrImportant);
+	fwrite(outbuf, sizeof(short), 3*cols*rows, outfile);
+	
+	fclose(outfile);
+    }
+    
+    if (outbuf)
+	free(outbuf);
 }
