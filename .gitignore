@@ -4,7 +4,10 @@ appendix_example.cine
 header_check
 cine-info
 cine-extract
+cine-extract.d
 *.o
 **/*.o
 **/*.a
+*~
+cscope*out
 TAGS
