@@ -95,7 +95,7 @@ typedef struct _VRP_BITMAPINFOHEADER {
                                      * color palette images not accepted
                                      */
     VRP_DWORD      biCompression;   /* only BI_RGB is supported */
-#define BI_RGB 0;                   /* per teh intarnets */
+#define BI_RGB 0                    /* per teh intarnets */
     VRP_DWORD      biSizeImage;     /* size of image in bytes */
     VRP_LONG       biXPelsPerMeter; /* horizontal resolution at sensor */
     VRP_LONG       biYPelsPerMeter; /* vertical resolution at sensor */
