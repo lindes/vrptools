@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
 
         if((first = handle->header->FirstImageNo) > 0)
         {
-            fprintf(stderr, "Sorry, trigger frame is not saved in this file (starts with frame %d).\n", trigger);
+            fprintf(stderr, "Sorry, trigger frame is not saved in this file (starts with frame %d).\n", first);
         }
 
         /* the offset of the frame we actually want: */
