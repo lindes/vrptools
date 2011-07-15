@@ -16,15 +16,19 @@ LIB_OBJ = lib/read_cine.o lib/print_helpers.o
 CFLAGS += -I.
 
 EXAMPLE_CINE = test_data/appendix_example.cine
+OUTPUT_DIR = cine-extract.d
 
 default: smalltest
 
-smalltest: cine-extract ${EXAMPLE_CINE}
+smalltest: cine-extract ${EXAMPLE_CINE} ${OUTPUT_DIR}
 	./cine-extract ${EXAMPLE_CINE}
 
 test: ${PROGRAMS} magic ${EXAMPLE_CINE}
 	file -M magic test_data/*.cine
 	./cine-info test_data/*.cine
+
+${OUTPUT_DIR}:
+	mkdir -p ${OUTPUT_DIR}
 
 programs program: ${PROGRAMS}
 
@@ -50,6 +54,7 @@ clean:
 
 clobber: clean
 	rm -f ${LIBRARY} ${PROGRAMS} ${EXAMPLE_CINE} TAGS
+	rm -rf ${OUTPUT_DIR}
 
 distclean: clobber
 	rm -f cine640.pdf
