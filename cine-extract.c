@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include "vrptools.h"
 #include "util.h"
@@ -61,6 +62,8 @@ void extract_image_by_offset(VRP_Handle handle, int offset,
 
     wb_r = handle->setup->WBGain[0].R;
     wb_b = handle->setup->WBGain[0].B;
+
+    assert(outbuf_out);
 
     outbuf = *outbuf_out;
     if (!outbuf)
