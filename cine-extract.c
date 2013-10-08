@@ -19,7 +19,7 @@
 
 void extract_to_ppm_dir(VRP_Handle handle, const char *outdir);
 
-void extract_image_by_offset(VRP_Handle handle, int offset, 
+void extract_image_by_offset(VRP_Handle handle, int offset,
 			     int *rows_out, int *cols_out,
 			     uint16_t **outbuf_out)
 {
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
     {
         VRP_Handle handle;
         int first, trigger, last;
-        
+
         if (!strcmp(argv[i], "-d")) {
             i ++;
             outdir = argv[i];
@@ -232,28 +232,28 @@ void extract_to_ppm_dir(VRP_Handle handle, const char *outdir)
     int rows, cols;
 
     if(first < 0) first = 0;
-    
+
     for(j = first; j < handle->header->ImageCount; j += increment)
     {
 	char filename[BUFSIZ];
 	FILE *outfile;
-	
+
 	sprintf(filename, "%s/img-%05u.ppm", outdir, j);
 	fprintf(stderr, "Extracting image at offset %d into %s\n", j, filename);
-	
+
 	if(!(outfile = fopen(filename, "wb")))
 	{
 	    perror(filename);
 	    return;
 	}
-	
+
 	extract_image_by_offset(handle, j, &rows, &cols, &outbuf);
 	fprintf(outfile, "P6\n%d %d\n%d\n", cols, rows, handle->imageHeader->biClrImportant);
 	fwrite(outbuf, sizeof(short), 3*cols*rows, outfile);
-	
+
 	fclose(outfile);
     }
-    
+
     if (outbuf)
 	free(outbuf);
 }
