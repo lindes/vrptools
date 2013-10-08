@@ -96,3 +96,21 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Example commands:
+-----------------
+
+To get a bit of information about a file:
+
+    ./cineinfo myfile.cine
+
+To extract each frame as a PPM image:
+
+     ./cine-extract -d myfile.ppms.d myfile.cine
+
+TODO
+----
+
+* Create other output formats, including something suitable for
+  streaming into [ffmpeg](http://www.ffmpeg.org/) or similar, for
+  conversion to other formats.
