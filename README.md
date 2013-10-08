@@ -21,17 +21,19 @@ This project, then, is an attempt to have a set of open-source
 utilities for getting data out of the proprietary (though publicly
 documented) "CINE" files.  There are, of course, a number of software
 packages out there already that will read these files, including the
-ones from Vision Research, other tools from [Glue
-Tools](http://www.gluetools.com/products_phantom.html), and others,
-but I was unable to find an open-source one, so... here it is.
+ones from Vision Research, other tools from
+[Glue Tools](http://www.gluetools.com/products_phantom.html), and
+others, but I was unable to find an open-source/free-software one,
+so... here is this.
 
 The cameras are fairly expensive, so I imagine their availability is
 limited.  Still, there seem to be more and more people shooting with
-them (as evidenced by a [video
-search](http://www.google.com/search?q=phantom+high+speed&um=1&tbs=vid:1&source=og);
-I get 4110 results as of 2011-02-23).  And I happen to occassionaly
-have access to one, and I have some files here that I want to read,
-and... well... so, here we are.
+them (as evidenced by a
+[video search](http://www.google.com/search?q=phantom+high+speed&um=1&tbs=vid:1&source=og);
+I got 4110 results as of 2011-02-23, and over 7 million as of
+2013-10-08).  Add to this the fact that I happen to occassionaly have
+had access to one, and I have some files here that I want to read, so,
+here we are.
 
 Status
 ------
