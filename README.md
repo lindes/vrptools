@@ -38,10 +38,12 @@ Status
 
 These tools are currently in their *infancy*.
 
-**DON'T EXPECT ANYTHING TO ACTUALLY WORK YET!**
+**Please keep your expectations low for this software, for now.**
 
-That said, `cineinfo` is actually starting to do something potentially
-useful.  And more will surely be coming soon.
+That said, `cineinfo` is starting to provide some vaguely-useful
+information about a CINE file, and `cine-extract` will now generate a
+series of PPM files (in `cine-extract.d` by default; changeable with
+`-d` option) from one, one per frame.
 
 There's also a "magic" file (a la `/etc/magic`).  I haven't yet taken
 the time to figure out how one would go about installing it on one's
@@ -77,13 +79,20 @@ Or drop me a private message on there with any questions.
 License information:
 --------------------
 
-This file, and everything else in this project (with the exception of
-content taken or derived from Vision Research's documentation), is
-under the following:
+Copyright 2011, 2013 by David Lindes.  All rights reserved.
 
-Copyright 2011 by David Lindes.  All rights reserved.
+The canonical source for this project is
+[github.com/lindes/vrptools](https://github.com/lindes/vrptools).
 
-It's also licensed according to the LICENSE file which (like this
-file) is part of [vrptools](https://github.com/lindes/vrptools).  That
-file should be considered to be included into this file by reference.
-Licensing subject to change; please see the LICENSE file.
+This program is [free software](https://en.wikipedia.org/wiki/Free_software): you can redistribute it and/or modify
+it under the terms of the [GNU General Public License](http://www.gnu.org/copyleft/gpl.html) as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
