@@ -19,6 +19,23 @@
 #include "vrptools.h"
 #include "util.h"
 
+/* extract_image_by_offset - extract the numbered image into a buffer
+ *
+ * input parameters:
+ *   handle - handle to opened VRP Cine file
+ *   offset - offset of image we want to extract
+ *
+ * output parameters:
+ *   rows_out - storage location to store number of rows extracted
+ *   cols_out -    "        "    "    "     "    "  cols     "
+ *   outbuf_out - optional buffer; contract:
+ *      if a NULL pointer is passed, it will be allocated;
+ *      may be re-used, when doing multiple calls;
+ *      Caller's responsibility to free it when done.
+ *
+ * side effects:
+ *   allocates memory for outbuf_out, if null pointer passed
+ */
 void extract_image_by_offset(VRP_Handle handle, int offset,
 			     int *rows_out, int *cols_out,
 			     uint16_t **outbuf_out)
@@ -141,6 +158,18 @@ void extract_image_by_offset(VRP_Handle handle, int offset,
     }
 }
 
+/*
+ * extract_to_ppm_dir - extract a sequence of PPM images into outdir
+ * inputs:
+ *   handle - VRP cine file handle
+ *   outdir - directory in which to place files (must already exist)
+ *
+ * outputs:
+ *   none (see side effects)
+ *
+ * side effects:
+ *   creates and/or over-writes files in outdir
+ */
 void extract_to_ppm_dir(VRP_Handle handle, const char *outdir)
 {
     unsigned int j;
@@ -178,7 +207,18 @@ void extract_to_ppm_dir(VRP_Handle handle, const char *outdir)
 	free(outbuf);
 }
 
-void extract_image_by_frame_id(VRP_Handle handle, int frame)
+/* offset_for_frame_id - return offset for a numbered frame
+ * inputs:
+ *   handle - handle to VRP Cine file
+ *   frame - frame number, in Cine reckoning
+ *
+ * return value:
+ *   zero-based offset of the identified frame (-1 means invalid frame number)
+ *
+ * side-effects:
+ *   none, unless frame is out of bounds in Cine file
+ */
+int extract_image_by_frame_id(VRP_Handle handle, int frame)
 {
     int offset, last;
 
@@ -189,10 +229,14 @@ void extract_image_by_frame_id(VRP_Handle handle, int frame)
     {
         fprintf(stderr, "Asking for frame %d, which is outside of range %d -> %d\n",
                 frame, handle->header->FirstImageNo, last);
+        return -1;
     }
-    fprintf(stderr, "frame %d means offset %d, fetching by offset\n", frame, offset);
+
+    return offset;
 }
 
+/* main - main program for cine-extract
+ */
 int main(int argc, char *argv[])
 {
     int i;
