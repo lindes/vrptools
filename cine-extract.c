@@ -16,6 +16,7 @@
 #include <stdint.h>
 
 #include "vrptools.h"
+#include "util.h"
 
 void extract_image_by_offset(VRP_Handle handle, int offset,
 			     int *rows_out, int *cols_out,
@@ -243,11 +244,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "DEBUG: first = %d, trig = %d, last = %d\n", first, trigger, last);
 
         fprintf(stderr, "Capturing the %d%s frame (frame #0 out of %d through %d)\n", trigger+1,
-               trigger+1 % 10 == 1 && trigger+1 != 11 ? "st" :
-               trigger+1 % 10 == 2 && trigger+1 != 12 ? "st" :
-               trigger+1 % 10 == 3 && trigger+1 != 13 ? "st" :
-               "th", first, last);
-
+                ordinal_suffix(trigger+1), first, last);
 
 	extract_to_ppm_dir(handle, outdir);
 

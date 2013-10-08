@@ -12,7 +12,7 @@ CFLAGS += -Werror -Wall -Wextra
 HEADERS = vrptools.h
 PROGRAMS = cine-info cine-extract
 LIBRARY = lib/libvrp.a
-LIB_OBJ = lib/read_cine.o lib/print_helpers.o
+LIB_OBJ = lib/read_cine.o lib/print_helpers.o lib/util.o
 CFLAGS += -I.
 
 EXAMPLE_CINE = test_data/appendix_example.cine
