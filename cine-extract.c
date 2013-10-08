@@ -17,8 +17,6 @@
 
 #include "vrptools.h"
 
-void extract_to_ppm_dir(VRP_Handle handle, const char *outdir);
-
 void extract_image_by_offset(VRP_Handle handle, int offset,
 			     int *rows_out, int *cols_out,
 			     uint16_t **outbuf_out)
@@ -139,6 +137,42 @@ void extract_image_by_offset(VRP_Handle handle, int offset,
     }
 }
 
+void extract_to_ppm_dir(VRP_Handle handle, const char *outdir)
+{
+    unsigned int j;
+    /* by default, all frames, 1 at a time */
+    /* TODO: make these command-line args */
+    int first = 0, increment = 1;
+    uint16_t *outbuf = NULL;
+    int rows, cols;
+
+    if (first < 0)
+        first = 0;
+
+    for (j = first; j < handle->header->ImageCount; j += increment)
+    {
+	char filename[BUFSIZ];
+	FILE *outfile;
+
+	sprintf(filename, "%s/img-%05u.ppm", outdir, j);
+	fprintf(stderr, "Extracting image at offset %d into %s\n", j, filename);
+
+	if (!(outfile = fopen(filename, "wb")))
+	{
+	    perror(filename);
+	    return;
+	}
+
+	extract_image_by_offset(handle, j, &rows, &cols, &outbuf);
+	fprintf(outfile, "P6\n%d %d\n%d\n", cols, rows, handle->imageHeader->biClrImportant);
+	fwrite(outbuf, sizeof(short), 3*cols*rows, outfile);
+
+	fclose(outfile);
+    }
+
+    if (outbuf)
+	free(outbuf);
+}
 
 void extract_image_by_frame_id(VRP_Handle handle, int frame)
 {
@@ -221,42 +255,4 @@ int main(int argc, char *argv[])
     }
 
     return(0);
-}
-
-
-void extract_to_ppm_dir(VRP_Handle handle, const char *outdir)
-{
-    unsigned int j;
-    /* by default, all frames, 1 at a time */
-    /* TODO: make these command-line args */
-    int first = 0, increment = 1;
-    uint16_t *outbuf = NULL;
-    int rows, cols;
-
-    if (first < 0)
-        first = 0;
-
-    for (j = first; j < handle->header->ImageCount; j += increment)
-    {
-	char filename[BUFSIZ];
-	FILE *outfile;
-
-	sprintf(filename, "%s/img-%05u.ppm", outdir, j);
-	fprintf(stderr, "Extracting image at offset %d into %s\n", j, filename);
-
-	if (!(outfile = fopen(filename, "wb")))
-	{
-	    perror(filename);
-	    return;
-	}
-
-	extract_image_by_offset(handle, j, &rows, &cols, &outbuf);
-	fprintf(outfile, "P6\n%d %d\n%d\n", cols, rows, handle->imageHeader->biClrImportant);
-	fwrite(outbuf, sizeof(short), 3*cols*rows, outfile);
-
-	fclose(outfile);
-    }
-
-    if (outbuf)
-	free(outbuf);
 }
