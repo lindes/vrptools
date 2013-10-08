@@ -38,13 +38,13 @@ void extract_image_by_offset(VRP_Handle handle, int offset,
         VRP_WORD b;
     } pixel;
 
-    if(handle->header->Compression != VRP_CC_UNINT)
+    if (handle->header->Compression != VRP_CC_UNINT)
     {
         fprintf(stderr, "Woah, sorry, don't (yet) know how to handle Compression type %d\n",
                 handle->header->Compression);
         return;
     }
-    if(handle->setup->CFA != VRP_CFA_BAYER)
+    if (handle->setup->CFA != VRP_CFA_BAYER)
     {
         fprintf(stderr, "Woah, sorry, don't (yet) know how to handle CFA type %d\n", handle->setup->CFA);
         return;
@@ -64,7 +64,7 @@ void extract_image_by_offset(VRP_Handle handle, int offset,
     wb_b = handle->setup->WBGain[0].B;
 
     outbuf = *outbuf_out;
-    if(!outbuf)
+    if (!outbuf)
     {
 	outbuf=calloc(bufsiz, sizeof(*outbuf));
 	if (!outbuf)
@@ -78,12 +78,12 @@ void extract_image_by_offset(VRP_Handle handle, int offset,
     *cols_out = cols;
 
     /* go through rows backwards, to convert bottom-up format to top-down: */
-    for(i = rows - 1; i >= 0; --i)
+    for (i = rows - 1; i >= 0; --i)
     {
         row = rows - i - 1;
 
         /* columns go in regular (left-to-right) order: */
-        for(j = 0; j < cols; ++j)
+        for (j = 0; j < cols; ++j)
         {
             col = j;
 
@@ -121,10 +121,10 @@ void extract_image_by_offset(VRP_Handle handle, int offset,
 
             /* adjust white balance */
             pixel.r = wb_r * pixel.r;
-            if(pixel.r >= handle->imageHeader->biClrImportant)
+            if (pixel.r >= handle->imageHeader->biClrImportant)
                 pixel.r = handle->imageHeader->biClrImportant - 1;
             pixel.b = wb_b * pixel.b;
-            if(pixel.b >= handle->imageHeader->biClrImportant)
+            if (pixel.b >= handle->imageHeader->biClrImportant)
                 pixel.b = handle->imageHeader->biClrImportant - 1;
 
             /* prepare to store -- using network byte order (big-endian) */
@@ -147,7 +147,7 @@ void extract_image_by_frame_id(VRP_Handle handle, int frame)
     offset = frame - handle->header->FirstImageNo;
     last = handle->header->FirstImageNo + handle->header->ImageCount;
 
-    if(offset < 0 || (unsigned)offset > handle->header->ImageCount)
+    if (offset < 0 || (unsigned)offset > handle->header->ImageCount)
     {
         fprintf(stderr, "Asking for frame %d, which is outside of range %d -> %d\n",
                 frame, handle->header->FirstImageNo, last);
@@ -160,15 +160,17 @@ int main(int argc, char *argv[])
     int i;
     const char *outdir = "cine-extract.d";
 
-    for(i = 1; i < argc; ++i)
+    for (i = 1; i < argc; ++i)
     {
         VRP_Handle handle;
         int first, trigger, last;
 
-        if (!strcmp(argv[i], "-d")) {
+        if (!strcmp(argv[i], "-d"))
+        {
             i ++;
             outdir = argv[i];
-            if (!outdir) {
+            if (!outdir)
+            {
                 fprintf(stderr, "Directory name must follow -d option\n");
                 exit(1);
             }
@@ -177,13 +179,13 @@ int main(int argc, char *argv[])
 
         fprintf(stderr, "--=> reading %s <=--\n", argv[i]);
 
-        if(!(handle = read_cine(argv[i])))
+        if (!(handle = read_cine(argv[i])))
         {
             fprintf(stderr, "Failed to get handle on %s\n", argv[i]);
             continue;
         }
 
-        if((first = handle->header->FirstImageNo) > 0)
+        if ((first = handle->header->FirstImageNo) > 0)
         {
             fprintf(stderr, "Sorry, trigger frame is not saved in this file (starts with frame %d).\n", first);
         }
@@ -193,12 +195,12 @@ int main(int argc, char *argv[])
 
         last = handle->header->ImageCount + first;
 
-        if(trigger < first)
+        if (trigger < first)
         {
             fprintf(stderr, "NOTICE: trigger frame 0 not in range %d -> %d, setting to %d\n", first, last, first);
             trigger = first;
         }
-        else if(trigger > last)
+        else if (trigger > last)
         {
             fprintf(stderr, "NOTICE: trigger frame 0 not in range %d -> %d, setting to %d\n", first, last, last);
             trigger = last;
@@ -231,9 +233,10 @@ void extract_to_ppm_dir(VRP_Handle handle, const char *outdir)
     uint16_t *outbuf = NULL;
     int rows, cols;
 
-    if(first < 0) first = 0;
+    if (first < 0)
+        first = 0;
 
-    for(j = first; j < handle->header->ImageCount; j += increment)
+    for (j = first; j < handle->header->ImageCount; j += increment)
     {
 	char filename[BUFSIZ];
 	FILE *outfile;
@@ -241,7 +244,7 @@ void extract_to_ppm_dir(VRP_Handle handle, const char *outdir)
 	sprintf(filename, "%s/img-%05u.ppm", outdir, j);
 	fprintf(stderr, "Extracting image at offset %d into %s\n", j, filename);
 
-	if(!(outfile = fopen(filename, "wb")))
+	if (!(outfile = fopen(filename, "wb")))
 	{
 	    perror(filename);
 	    return;
