@@ -125,7 +125,7 @@ TODO
 * Clean up various aspects of the code, to be more modular,
   expandable, etc.
 
-IMAGINED POSSIBILITIES
+Imagined Possibilities
 ----------------------
 
 (Like TODO, but more a "this is one way things could go" list.  If you
@@ -133,7 +133,7 @@ want things from this list, please let me know.)
 
 * Add bindings for other languages (python, ruby, perl)?
 
-SEE ALSO
+See Also
 --------
 
 There's a related project called
