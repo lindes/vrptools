@@ -116,3 +116,26 @@ TODO
 * Create other output formats, including something suitable for
   streaming into [ffmpeg](http://www.ffmpeg.org/) or similar, for
   conversion to other formats.
+* Find a way to emit ([SMPTE](https://www.smpte.org/)-compliant, if
+  possible -- for the framerates we have, it may not make sense)
+  [timecode](https://en.wikipedia.org/wiki/SMPTE_timecode) information
+  (or its functional equivalent) in some way (either in sidecar files,
+  or directly encoded into the output stream, where applicable).
+* Allow input-file-based output-directory(/file) naming.
+* Clean up various aspects of the code, to be more modular,
+  expandable, etc.
+
+IMAGINED POSSIBILITIES
+----------------------
+
+(Like TODO, but more a "this is one way things could go" list.  If you
+want things from this list, please let me know.)
+
+* Add bindings for other languages (python, ruby, perl)?
+
+SEE ALSO
+--------
+
+There's a related project called
+[pycine](https://github.com/adamdlight/pyCine), which uses native
+[Python](http://www.python.org/) code to read CINE files.
